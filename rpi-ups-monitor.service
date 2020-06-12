@@ -1,0 +1,11 @@
+[Service]
+WorkingDirectory=/home/pi/rpi-ups-monitor
+ExecStart=ruby /home/pi/rpi-ups-monitor/run.rb
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=rpi-ups-monitor
+User=root
+Group=root
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,5 @@
+{
+  "amqp_host": "amqp://user:pass@host:port/vhost",
+  "device_id": "for future use, not used yet",
+  "ups_name": "cyberpower@localhost"
+}
