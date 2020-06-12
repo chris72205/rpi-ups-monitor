@@ -22,3 +22,7 @@ $ sudo systemctl status rpi-ups-monitor # this is optional, just for ensuring it
 $ sudo systemctl enable rpi-ups-monitor
 ```
 
+Optionally add this cronjob to update every 15 minutes:
+```
+*/15 * * * * git -C /home/pi/rpi-ups-monitor pull
+```
