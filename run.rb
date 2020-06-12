@@ -3,7 +3,7 @@
 require "bunny"
 require "json"
 
-include 'nut_adapter'
+load 'nut_adapter.rb'
 
 settings = JSON.parse File.read("settings.json")
 
@@ -13,11 +13,18 @@ bunny.start
 channel = bunny.create_channel
 exchange = channel.topic("sensors", :auto_delete => true)
 
-adapter = NutAdapter.new(settings['device_id'])
+adapter = NutAdapter.new(settings['ups_name'])
 
 # enter loop and publish ups_data every ~30 seconds
 while true do
-  exchange.publish(adapter.current_load, routing_key: "ups-monitor")
+  exchange.publish(
+    {
+      device_id: settings['device_id'],
+      ups_name: settings['ups_name'],
+      watts: adapter.current_load
+    }.to_json,
+    routing_key: "ups-monitor"
+  )
 
   sleep 30
 end
