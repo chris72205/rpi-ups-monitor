@@ -21,7 +21,8 @@ while true do
     {
       device_id: settings['device_id'],
       ups_name: settings['ups_name'],
-      watts: adapter.current_load
+      watts: adapter.current_load,
+      time: Time.now.to_i
     }.to_json,
     routing_key: "ups-monitor"
   )
