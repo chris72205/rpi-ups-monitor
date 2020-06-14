@@ -7,7 +7,14 @@ load 'nut_adapter.rb'
 
 settings = JSON.parse File.read("settings.json")
 
-bunny = Bunny.new(settings['amqp_url'])
+bunny = Bunny.new(
+  settings['amqp_url'],
+  {
+    client_properties: {
+      connection_name: settings['device_id']
+    }
+  }
+)
 bunny.start
 
 channel = bunny.create_channel
@@ -24,7 +31,7 @@ while true do
       watts: adapter.current_load,
       time: Time.now.to_i
     }.to_json,
-    routing_key: "ups-monitor"
+    routing_key: "power"
   )
 
   sleep 30
