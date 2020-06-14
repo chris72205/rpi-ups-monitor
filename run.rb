@@ -22,17 +22,33 @@ exchange = channel.topic("sensors", :auto_delete => true)
 
 adapter = NutAdapter.new(settings['ups_name'])
 
-# enter loop and publish ups_data every ~30 seconds
-while true do
-  exchange.publish(
-    {
-      device_id: settings['device_id'],
-      ups_name: settings['ups_name'],
-      watts: adapter.current_load,
-      time: Time.now.to_i
-    }.to_json,
-    routing_key: "power"
-  )
+lastSend = Time.now
+readings = []
 
-  sleep 30
+while true do
+  # check if it's been a minute since we last sent anything
+  if(lastSend < (Time.now - 60) && readings.any?)
+    # collect average
+    average = readings.sum / readings.count
+
+    # publish average
+    exchange.publish(
+      {
+        device_id: settings['device_id'],
+        ups_name: settings['ups_name'],
+        watts: average,
+        time: Time.now.to_i
+      }.to_json,
+      routing_key: "power"
+    )
+
+    # reset variables
+    readings = []
+    lastSend = Time.now
+  end
+
+  # collect current_load value
+  readings << adapter.current_load
+
+  sleep 5
 end
