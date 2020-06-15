@@ -18,7 +18,7 @@ bunny = Bunny.new(
 bunny.start
 
 channel = bunny.create_channel
-exchange = channel.topic("sensors-temporary", auto_delete: false)
+exchange = channel.topic("sensors", auto_delete: false, durable: true)
 
 adapter = NutAdapter.new(settings['ups_name'])
 
