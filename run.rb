@@ -18,7 +18,7 @@ bunny = Bunny.new(
 bunny.start
 
 channel = bunny.create_channel
-exchange = channel.topic("sensors", :auto_delete => true)
+exchange = channel.topic("sensors-temporary", auto_delete: false)
 
 adapter = NutAdapter.new(settings['ups_name'])
 
